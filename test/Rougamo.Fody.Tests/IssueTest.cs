@@ -63,5 +63,43 @@ namespace Rougamo.Fody.Tests
             await (Task)instance.M(items);
             Assert.Equal(expected, items);
         }
+
+        [Fact]
+        public async Task Issue25Test()
+        {
+            var instance = GetInstance(nameof(Issue25));
+
+            instance.GenericMethod<System.IO.MemoryStream>();
+            await (Task)instance.AsyncGenericMethod<System.IO.MemoryStream>();
+        }
+
+        [Fact]
+        public async Task Issue27Test()
+        {
+            var instance = GetInstance(nameof(Issue27));
+
+            instance.Get<object>();
+            await (Task<object>)instance.GetAsync<object>();
+        }
+
+#if !DEBUG
+        // This issue only appears in release mode
+        [Fact]
+        public async Task Issue29Test()
+        {
+            var instancee = GetInstance(nameof(Issue29));
+
+            await (Task)instancee.Test(null);
+        }
+#endif
+
+        [Fact]
+        public async Task Issue30Test()
+        {
+            var sInstance = GetStaticInstance(nameof(Issue30));
+
+            var v = await (Task<string>)sInstance.Test(" 123");
+            Assert.Equal("123", v);
+        }
     }
 }

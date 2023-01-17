@@ -16,6 +16,13 @@ namespace Rougamo.Context
         private Type? _exReturnType;
 
         /// <summary>
+        /// Compatibility with versions prior to 1.2.0
+        /// </summary>
+        [Obsolete]
+        public MethodContext(object target, Type targetType, MethodBase method, bool isAsync, bool isIterator, object[] args)
+            : this(target, targetType, method, isAsync, isIterator, false, new IMo[0], args) { }
+
+        /// <summary>
         /// </summary>
         public MethodContext(object target, Type targetType, MethodBase method, bool isAsync, bool isIterator, bool mosNonEntryFIFO, IMo[] mos, object[] args)
         {
@@ -75,6 +82,11 @@ namespace Rougamo.Context
         /// Method arguments
         /// </summary>
         public object[] Arguments { get; private set; }
+
+        /// <summary>
+        /// When set to true, <see cref="Arguments"/> will rewrite method parameter values after <see cref="IMo.OnEntry(MethodContext)"/> is executed
+        /// </summary>
+        public bool RewriteArguments { get; set; }
 
         /// <summary>
         /// Method info
@@ -143,7 +155,7 @@ namespace Rougamo.Context
                     {
                         _exReturnType = typeof(void);
                     }
-                    else if (typeof(Task).IsAssignableFrom(returnType) || returnType.FullName.StartsWith(Constants.FULLNAME_ValueTask))
+                    else if (typeof(Task).IsAssignableFrom(returnType) || !returnType.IsGenericParameter && returnType.FullName.StartsWith(Constants.FULLNAME_ValueTask))
                     {
                         _exReturnType = returnType.GetGenericArguments().Single();
                     }
@@ -237,20 +249,12 @@ namespace Rougamo.Context
         {
             if (HasReturnValue)
             {
-                if (exMode)
+                if (exMode)        
                 {
-                    if (ExReturnType == null || !ExReturnType.Setable(returnValue))
-                    {
-                        throw new ArgumentException($"Method ex return type({ExReturnType?.FullName}) is not assignable from returnvalue({returnValue?.GetType().FullName})");
-                    }
                     ExReturnValue = returnValue;
                 }
                 else
                 {
-                    if (RealReturnType == null || !RealReturnType.Setable(returnValue))
-                    {
-                        throw new ArgumentException($"Method real return type({RealReturnType?.FullName}) is not assignable from returnvalue({returnValue?.GetType().FullName})");
-                    }
                     ReturnValue = returnValue;
                 }
             }

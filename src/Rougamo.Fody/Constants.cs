@@ -17,6 +17,7 @@
         public const string TYPE_Task = "System.Threading.Tasks.Task";
         public const string TYPE_ValueTask = "System.Threading.Tasks.ValueTask";
         public const string TYPE_MulticastDelegate = "System.MulticastDelegate";
+        public const string TYPE_ObsoleteAttribute = "System.ObsoleteAttribute";
         public const string TYPE_AsyncStateMachineAttribute = "System.Runtime.CompilerServices.AsyncStateMachineAttribute";
         public const string TYPE_IteratorStateMachineAttribute = "System.Runtime.CompilerServices.IteratorStateMachineAttribute";
         public const string TYPE_AsyncIteratorStateMachineAttribute = "System.Runtime.CompilerServices.AsyncIteratorStateMachineAttribute";
@@ -35,6 +36,8 @@
         public const string PROP_ReturnValue = "ReturnValue";
         public const string PROP_ExceptionHandled = "ExceptionHandled";
         public const string PROP_ReturnValueReplaced = "ReturnValueReplaced";
+        public const string PROP_Arguments = "Arguments";
+        public const string PROP_RewriteArguments = "RewriteArguments";
 
         public const string FIELD_Flags = "<Flags>k__BackingField";
         public const string FIELD_Repulsions = "<Repulsions>k__BackingField";

@@ -80,12 +80,14 @@ namespace Rougamo.Fody
                 _typeIMoRef = imoTypeDef.ImportInto(ModuleDefinition);
                 _typeIMoArrayRef = new ArrayType(_typeIMoRef);
                 var typeMethodContextDef = _typeMethodContextRef.Resolve();
-                _methodMethodContextCtorRef = typeMethodContextDef.GetConstructors().First().ImportInto(ModuleDefinition);
+                _methodMethodContextCtorRef = typeMethodContextDef.GetConstructors().First(x => !x.CustomAttributes.Any(y => y.AttributeType.Is(Constants.TYPE_ObsoleteAttribute))).ImportInto(ModuleDefinition);
                 _methodMethodContextSetExceptionRef = typeMethodContextDef.RecursionImportPropertySet(ModuleDefinition, Constants.PROP_Exception);
                 _methodMethodContextSetReturnValueRef = typeMethodContextDef.RecursionImportPropertySet(ModuleDefinition, Constants.PROP_ReturnValue);
                 _methodMethodContextGetReturnValueRef = typeMethodContextDef.RecursionImportPropertyGet(ModuleDefinition, Constants.PROP_ReturnValue);
                 _methodMethodContextGetExceptionHandledRef = typeMethodContextDef.RecursionImportPropertyGet(ModuleDefinition, Constants.PROP_ExceptionHandled);
                 _methodMethodContextGetReturnValueReplacedRef = typeMethodContextDef.RecursionImportPropertyGet(ModuleDefinition, Constants.PROP_ReturnValueReplaced);
+                _methodMethodContextGetArgumentsRef = typeMethodContextDef.RecursionImportPropertyGet(ModuleDefinition, Constants.PROP_Arguments);
+                _methodMethodContextGetRewriteArgumentsRef = typeMethodContextDef.RecursionImportPropertyGet(ModuleDefinition, Constants.PROP_RewriteArguments);
                 // Private fields cannot be accessed externally even using IL
                 //_fieldMethodContextExceptionRef = typeMethodContextDef.Fields.Single(x => x.Name == Constants.FIELD_Exception).ImportInto(ModuleDefinition);
                 //_fieldMethodContextReturnValueRef = typeMethodContextDef.Fields.Single(x => x.Name == Constants.FIELD_ReturnValue).ImportInto(ModuleDefinition);
